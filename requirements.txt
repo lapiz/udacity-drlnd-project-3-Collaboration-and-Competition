@@ -1,0 +1,4 @@
+numpy
+torch==0.4.0
+matplotlib
+mlagents==0.4

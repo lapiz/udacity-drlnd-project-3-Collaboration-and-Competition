@@ -93,5 +93,7 @@ if __name__ == '__main__':
     fn = 'Tennis.app'
     if platform.system() == 'Linux':
         fn = 'Tennis_Linux_NoVis/Tennis.x86_64'
+    elif platform.system() == 'Windows':
+        fn = 'Tennis_Windows_x86_64/Tennis.exe'
     env = UnityEnvironment(file_name=fn)    
     train(env, hparams)

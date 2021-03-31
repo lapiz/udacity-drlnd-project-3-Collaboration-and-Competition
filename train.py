@@ -74,7 +74,6 @@ def train(env, hparams):
 
             if np.any(dones):
                 break
-        print('')
         if scores.AddScore(np.max(epoch_score)) is True:
             break
 

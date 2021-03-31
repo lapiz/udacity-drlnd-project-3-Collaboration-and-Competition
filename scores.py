@@ -19,7 +19,7 @@ class Scores():
         self.scores_window.append(score)
 
         window_mean = np.mean(self.scores_window)
-        print(F'\r[{datetime.now()}] Episode {self.episode}\tScore: {score:.2f}\tAverage Score: {window_mean:.2f}')
+        print(F'\r[{datetime.now()}] Episode {self.episode}\tScore: {score:.4f}\tAverage Score: {window_mean:.4f}')
         if self.episode % self.window_size == 0:
             self.scores_log.append( (self.episode, window_mean) )
         if window_mean >= self.expected:
@@ -42,6 +42,8 @@ class Scores():
         plt.plot(np.arange(len(self.scores)), self.scores)
         plt.ylabel('Score')
         plt.xlabel('Episode #')
+        means = pd.Series(self.scores).rolling(self.window_size).mean()
+        plt.plot(means, linewidth=2)
         plt.savefig(F'{prefix}_scores.png', dpi=300)
         if showNow:
             plt.show()

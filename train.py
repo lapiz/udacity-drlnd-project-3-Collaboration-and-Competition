@@ -38,10 +38,9 @@ def train(env, hparams):
     state_size = states.shape[1]
 
     
-    Agent.set_hparams(state_size, action_size, hparams)
     agents = []
     for _ in range(num_agents):
-        agents.append( Agent(action_size))
+        agents.append( Agent(state_size, action_size, hparams))
     
     prefix = f'result/{hparams["output"]}'
 
@@ -77,7 +76,9 @@ def train(env, hparams):
         if scores.AddScore(np.max(epoch_score)) is True:
             break
 
-    Agent.save(prefix)
+    for i in range(len(agents)):
+        agents[i].save( f'{prefix}_agent_{i}' )
+        
     scores.FlushLog(prefix, False)
 
 
@@ -93,5 +94,7 @@ if __name__ == '__main__':
     fn = 'Tennis.app'
     if platform.system() == 'Linux':
         fn = 'Tennis_Linux_NoVis/Tennis.x86_64'
+    elif platform.system() == 'Windows':
+        fn = 'Tennis_Windows_x86_64/Tennis.exe'
     env = UnityEnvironment(file_name=fn)    
     train(env, hparams)

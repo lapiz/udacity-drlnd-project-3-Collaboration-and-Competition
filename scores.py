@@ -20,7 +20,7 @@ class Scores():
         self.scores_window.append(score)
 
         window_mean = np.mean(self.scores_window)
-        print(F'\r[{datetime.now()}] Episode {self.episode}\tScore: {score:.4f}\tAverage Score: {window_mean:.4f}')
+        print(F'\r[{datetime.now()}] Episode {self.episode}\tScore: {score:.4f}\tAverage Score: {window_mean:.4f}', end='')
         if self.episode % self.window_size == 0:
             self.scores_log.append( (self.episode, window_mean) )
         if window_mean >= self.expected:

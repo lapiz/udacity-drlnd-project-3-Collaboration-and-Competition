@@ -13,87 +13,61 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 class Agent():
     """Interacts with and learns from the environment."""
-    shared_actor_local = None
-    shared_actor_target = None
-    shared_actor_optimizer = None
-    
-    shared_critic_local = None
-    shared_critic_target = None
-    shared_critic_optimizer = None
-
-    shared_memory = None
-
-    shared_learn_per_step = 0
-    shared_update_times = 0
-    def __init__(self, action_size):
+    def __init__(self, state_size, action_size, hparams):
         """Initialize an Agent object.
         
         Params
         ======
+            state_size (int): dimension of each state
             action_size (int): dimension of each action
+            hparams (dict): hparams
         """
+
+        self.batch_size = hparams['batch_size']
+        self.tau = hparams['tau']
+        self.gamma = hparams['gamma']
+        self.learn_per_step = hparams['learn_per_step']
+        self.update_times = hparams['update_times']
+
+        lr = hparams['lr']
+        actor_hidden = hparams['hidden_layers']['actor']
+
         # Actor Network (w/ Target Network)
-        self.actor_local = Agent.shared_actor_local
-        self.actor_target = Agent.shared_actor_target
-        self.actor_optimizer = Agent.shared_actor_optimizer
+        self.actor_local = Actor(state_size, action_size, actor_hidden).to(device)
+        self.actor_target = Actor(state_size, action_size, actor_hidden).to(device)
+        self.actor_optimizer = optim.Adam(self.actor_local.parameters(), lr=lr['actor'])
 
         # Critic Network (w/ Target Network)
-        self.critic_local = Agent.shared_critic_local
-        self.critic_target = Agent.shared_critic_target
-        self.critic_optimizer = Agent.shared_critic_optimizer
+        critic_hidden = hparams['hidden_layers']['critic']
+        self.critic_local = Critic(state_size, action_size, critic_hidden).to(device)
+        self.critic_target = Critic(state_size, action_size, critic_hidden).to(device)
+        self.critic_optimizer = optim.Adam(self.critic_local.parameters(), lr=lr['critic'], weight_decay=hparams['weight_decay'])
 
         # Noise process
         self.noise = OUNoise(action_size)
 
         # Replay memory
-        self.memory = Agent.shared_memory
+        self.memory = ReplayBuffer(action_size, hparams['buffer_size'], self.batch_size)        
     
-    @staticmethod
-    def set_hparams(state_size, action_size, hparams):
-        Agent.hparams = hparams
+    def save(self, prefix):
+        torch.save(self.actor_local.state_dict(), f'{prefix}_actor.pth')
+        torch.save(self.critic_local.state_dict(), f'{prefix}_critic.pth')
 
-        Agent.batch_size = hparams['batch_size']
-        Agent.tau = hparams['tau']
-        Agent.gamma = hparams['gamma']
-        Agent.shared_learn_per_step = hparams['learn_per_step']
-        Agent.shared_update_times = hparams['update_times']
-
-        lr = hparams['lr']
-        actor_hidden = hparams['hidden_layers']['actor']
-
-        Agent.shared_actor_local = Actor(state_size, action_size, actor_hidden).to(device)
-        Agent.shared_actor_target = Actor(state_size, action_size, actor_hidden).to(device)
-        Agent.shared_actor_optimizer = optim.Adam(Agent.shared_actor_local.parameters(), lr=lr['actor'])
-
-        critic_hidden = hparams['hidden_layers']['critic']
-        Agent.shared_critic_local = Critic(state_size, action_size, critic_hidden).to(device)
-        Agent.shared_critic_target = Critic(state_size, action_size, critic_hidden).to(device)
-        Agent.shared_critic_optimizer = optim.Adam(Agent.shared_critic_local.parameters(), lr=lr['critic'], weight_decay=hparams['weight_decay'])
-        
-        Agent.shared_memory = ReplayBuffer(action_size, hparams['buffer_size'], Agent.batch_size)
-
-
-    @staticmethod
-    def save(prefix):
-        torch.save(Agent.shared_actor_local.state_dict(), f'{prefix}_actor.pth')
-        torch.save(Agent.shared_critic_local.state_dict(), f'{prefix}_critic.pth')
-
-    @staticmethod
-    def load(prefix):
-        Agent.shared_actor_local.load_state_dict(torch.load(f'{prefix}_actor.pth'))
+    def load(self, prefix):
+        self.actor_local.load_state_dict(torch.load(f'{prefix}_actor.pth'))
 
     def step(self, t, state, action, reward, next_state, done):
         """Save experience in replay memory, and use random sample from buffer to learn."""
         # Save experience / reward
         self.memory.add(state, action, reward, next_state, done)
 
-        if t % Agent.shared_learn_per_step != 0:
+        if t % self.learn_per_step != 0:
             return
         # Learn, if enough samples are available in memory
-        if len(self.memory) > Agent.batch_size:
-            for _ in range(Agent.shared_update_times):
+        if len(self.memory) > self.batch_size:
+            for _ in range(self.update_times):
                 experiences = self.memory.sample()
-                self.learn(experiences, Agent.gamma)
+                self.learn(experiences, self.gamma)
 
     def act(self, state, add_noise=True):
         """Returns actions for given state as per current policy."""
@@ -162,7 +136,7 @@ class Agent():
             tau (float): interpolation parameter 
         """
         for target_param, local_param in zip(target_model.parameters(), local_model.parameters()):
-            target_param.data.copy_(Agent.tau*local_param.data + (1.0-Agent.tau)*target_param.data)
+            target_param.data.copy_(self.tau*local_param.data + (1.0-self.tau)*target_param.data)
 
 class OUNoise:
     """Ornstein-Uhlenbeck process."""

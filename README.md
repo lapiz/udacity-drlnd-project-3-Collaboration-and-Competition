@@ -4,7 +4,11 @@ This repository contains an implementation of project 3 for [Udacity's Deep Rein
 
 ## Project Details
 
-TBD
+In this environment, two agents control rackets to bounce a ball over a net. If an agent hits the ball over the net, it receives a reward of +0.1. If an agent lets a ball hit the ground or hits the ball out of bounds, it receives a reward of -0.01. Thus, the goal of each agent is to keep the ball in play.
+
+The observation space consists of 8 variables corresponding to the position and velocity of the ball and racket. Each agent receives its own, local observation. Two continuous actions are available, corresponding to movement toward (or away from) the net, and jumping.
+
+My agents get average (over 100 episodes) of those scores (maximun value of two agents) is at least +0.5.
 
 ## Getting Started
 
@@ -46,8 +50,55 @@ Different versions of the Unity environment are required on different operationa
 
 ## Instructions
 
-TBD
+- Command lines
+  - If train yourself, run it. you can skip hparam filename, it found 'default.json' file.
+
+```bash
+python train.py hparam.json
+```
+
+- Notebook
+  - If train, open [Tennis.ipynb](Tennis.ipynb)
+  - If run with already trained data, open [run_trained.ipynb](run_trained.ipynb)
 
 ## Files
 
-TBD
+- README.md
+  - This file
+- requirements.txt
+  - python environment requirements packages
+  - Use pip with -r options
+- Tennis.ipynb
+  - Main notebook file.
+  - Based on udacity project skelecton notebook
+  - I implemented my agent and some helper classes.
+- run_trained.ipynb
+  - Run with trained data sample
+- Report.ipynb
+  - My Project report.
+  - Include these things
+    - Learning Algorithm
+      - Hyperpameters
+      - Model architechures
+    - Plot of Rewards
+- default_agent_0_actor.pth
+  - trained model weights for actor of agent 0
+- default_agent_0_critic.pth
+  - trained model weights for critic of agent 0
+- default_agent_1_actor.pth
+  - trained model weights for actor of agent 1
+- default_agent_1_critic.pth
+  - trained model weights for critic of agent 1
+- scores.py
+  - helper code for score data
+- train.py
+  - Train ddpg agents.
+  - Based on udacity DRLND ddqg-bipdel sample project and my second project
+  - Run command line with hparam json arguments for test
+- ddpg_agent.py
+  - DDPG Agent implementation with PlayBuffer
+  - Based on udacity DRLND ddqg-bipdel sample project and my second project
+  - Remove shared network from my second projects
+- model.py
+  - Model described by hidden layers (Actor and Critic)
+  - same as my second project

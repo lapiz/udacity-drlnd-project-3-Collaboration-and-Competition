@@ -1,0 +1,48 @@
+Job started at 2021-04-01 12:29:10.083270
+Episode 100	Average Score: 0.00
+Episode 200	Average Score: 0.00
+Episode 300	Average Score: 0.00
+Episode 400	Average Score: 0.00
+Episode 500	Average Score: 0.00
+Episode 600	Average Score: 0.00
+Episode 700	Average Score: 0.00
+Episode 800	Average Score: 0.00
+Episode 900	Average Score: 0.01
+Episode 1000	Average Score: 0.00
+Episode 1100	Average Score: 0.01
+Episode 1200	Average Score: 0.01
+Episode 1300	Average Score: 0.00
+Episode 1400	Average Score: 0.01
+Episode 1500	Average Score: 0.02
+Episode 1600	Average Score: 0.01
+Episode 1700	Average Score: 0.00
+Episode 1800	Average Score: 0.00
+Episode 1900	Average Score: 0.02
+Episode 2000	Average Score: 0.03
+Episode 2100	Average Score: 0.04
+Episode 2200	Average Score: 0.06
+Episode 2300	Average Score: 0.07
+Episode 2400	Average Score: 0.06
+Episode 2500	Average Score: 0.09
+Episode 2600	Average Score: 0.17
+Episode 2700	Average Score: 0.12
+Episode 2800	Average Score: 0.17
+Episode 2900	Average Score: 0.19
+Episode 3000	Average Score: 0.26
+Episode 3100	Average Score: 0.20
+Episode 3200	Average Score: 0.27
+Episode 3300	Average Score: 0.37
+Episode 3400	Average Score: 0.34
+Episode 3500	Average Score: 0.39
+Episode 3600	Average Score: 0.27
+Episode 3700	Average Score: 0.30
+Episode 3800	Average Score: 0.42
+Episode 3900	Average Score: 0.40
+Episode 3966	Average Score: 0.52
+Episode 3966	Average Score: 0.52
+Min: 0.0
+Max: 2.3000000342726707
+Count: 3966
+Avg: 0.1165582468489911
+Std: 0.2372869040068644
+Job finished at 2021-04-01 13:42:18.944032
